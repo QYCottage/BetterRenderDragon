@@ -62,6 +62,8 @@ SKY_AUTO_STATIC_HOOK(getGameVersionString, memory::HookPriority::Normal,
     MaterialResourceManagerOffset = 960;
   } else if (version.find("1.21.100") != std::string::npos) {
     MaterialResourceManagerOffset = 960;
+  } else if (version.find("1.21.11") != std::string::npos) {
+    MaterialResourceManagerOffset = 960;
   }
   return version;
 }
@@ -100,7 +102,10 @@ SKY_AUTO_STATIC_HOOK(
          "8B 05 ? ? ? ? 48 33 C4 48 89 45 ? 48 8B FA",
          // 1.21.100
          "48 89 5C 24 ? 48 89 7C 24 ? 55 48 8D 6C 24 ? 48 81 EC 60 01 00 00 "
-         "48 8B 05 ? ? ? ? 48 33 C4 48 89 45 ? 48 8B F9 48 89 4D"}),
+         "48 8B 05 ? ? ? ? 48 33 C4 48 89 45 ? 48 8B F9 48 89 4D",
+         // 1.21.111
+         "48 89 5C 24 ? 48 89 74 24 ? 55 48 8D AC 24 ? ? ? ? 48 81 EC ? ? ? ? "
+         "48 8B 05 ? ? ? ? 48 33 C4 48 89 85 ? ? ? ? 48 8B D9 48 89 4C 24"}),
     std::string *, void *This, std::string *retstr, Core::Path &path) {
   std::string *result = origin(This, retstr, path);
   if (brd::Options::materialBinLoaderEnabled && brd::Options::redirectShaders &&
@@ -175,7 +180,11 @@ SKY_AUTO_STATIC_HOOK(
          "B8 40 34 00 00",
          // 1.21.100
          "48 89 5C 24 ? 55 56 57 41 54 41 55 41 56 41 57 48 8D AC 24 ? ? ? ? "
-         "B8 D0 30 00 00"}),
+         "B8 D0 30 00 00",
+         // 1.21.111
+         "48 89 5C 24 ? 55 56 57 41 54 41 55 41 56 41 57 48 8D AC 24 ? ? ? ? B8 "
+         "? ? ? ? E8 ? ? ? ? 48 2B E0 0F 29 B4 24 ? ? ? ? 0F 29 BC 24 ? ? ? ? 44 "
+         "0F 29 84 24 ? ? ? ? 44 0F 29 8C 24 ? ? ? ? 48 8B 05"}),
     void, uintptr_t This, uintptr_t frameBuilderContext) {
   bool clear = false;
   if (brd::Options::reloadShadersAvailable && brd::Options::reloadShaders) {
@@ -224,7 +233,13 @@ void initMCHooks() {
                                  "48 33 C4 48 89 84 24 ? ? "
                                  "? ? 44 0F B6 EA"});
   if (!discardFrame) {
-    printf("mce::framebuilder::BgfxFrameBuilder::discardFrame not found\n");
+    discardFrame = (PFN_mce_framebuilder_BgfxFrameBuilder_discardFrame)
+      memory::resolveIdentifier({"4C 8B DC 49 89 5B ? 49 89 6B ? 49 89 73 ? "
+                                "57 41 54 41 55 41 56 41 57 48 81 EC ? ? ? ? "
+                                "48 8B 05 ? ? ? ? 48 33 C4 48 89 84 24 ? ? ? ? 88 54 24"});
+    if (!discardFrame) {
+      printf("mce::framebuilder::BgfxFrameBuilder::discardFrame not found\n");
+    }
   }
 
   freeShaderBlobs =
