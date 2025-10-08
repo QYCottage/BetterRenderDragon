@@ -60,7 +60,7 @@ SKY_AUTO_STATIC_HOOK(getGameVersionString, memory::HookPriority::Normal,
     MaterialResourceManagerOffset = 960;
   } else if (version.find("1.21.9") != std::string::npos) {
     MaterialResourceManagerOffset = 960;
-  } else if (version.find("1.21.100") != std::string::npos) {
+  } else if (version.find("1.21.10") != std::string::npos) {
     MaterialResourceManagerOffset = 960;
   } else if (version.find("1.21.11") != std::string::npos) {
     MaterialResourceManagerOffset = 960;
@@ -125,19 +125,8 @@ SKY_AUTO_STATIC_HOOK(
       if (success && !out.empty()) {
         bool successful_update = true;
         struct Buffer outbufdata = {0, 0};
-        if (update_file(out.length(), (const uint8_t *)out.c_str(),
-                        &outbufdata) != 0) {
-          // printf("Updating failed!");
-          successful_update = false;
-          free_buf(outbufdata);
-        }
 
-        if (!successful_update) {
-          result->assign(out);
-        } else {
-          result->assign((const char *)outbufdata.data, outbufdata.len);
-          free_buf(outbufdata);
-        }
+        result->assign(out);
       }
       // printf("ResourcePackManager::load ret=%d\n", success);
     }
@@ -182,9 +171,8 @@ SKY_AUTO_STATIC_HOOK(
          "48 89 5C 24 ? 55 56 57 41 54 41 55 41 56 41 57 48 8D AC 24 ? ? ? ? "
          "B8 D0 30 00 00",
          // 1.21.111
-         "48 89 5C 24 ? 55 56 57 41 54 41 55 41 56 41 57 48 8D AC 24 ? ? ? ? B8 "
-         "? ? ? ? E8 ? ? ? ? 48 2B E0 0F 29 B4 24 ? ? ? ? 0F 29 BC 24 ? ? ? ? 44 "
-         "0F 29 84 24 ? ? ? ? 44 0F 29 8C 24 ? ? ? ? 48 8B 05"}),
+         "48 89 5C 24 ? 55 56 57 41 54 41 55 41 56 41 57 48 8D AC 24 ? ? ? ? "
+         "B8 C0 1C 00 00"}),
     void, uintptr_t This, uintptr_t frameBuilderContext) {
   bool clear = false;
   if (brd::Options::reloadShadersAvailable && brd::Options::reloadShaders) {
@@ -227,19 +215,18 @@ SKY_AUTO_STATIC_HOOK(RayTracingResourcesConstrucstor,
 void initMCHooks() {
 
   discardFrame = (PFN_mce_framebuilder_BgfxFrameBuilder_discardFrame)
-      memory::resolveIdentifier({"48 89 5C 24 ? 48 89 6C 24 ? 48 89 74 24 ? "
-                                 "57 41 54 41 55 41 56 41 "
-                                 "57 48 81 EC 90 00 00 00 48 8B 05 ? ? ? ? "
-                                 "48 33 C4 48 89 84 24 ? ? "
-                                 "? ? 44 0F B6 EA"});
+      memory::resolveIdentifier(
+          {"48 89 5C 24 ? 48 89 6C 24 ? 48 89 74 24 ? "
+           "57 41 54 41 55 41 56 41 "
+           "57 48 81 EC 90 00 00 00 48 8B 05 ? ? ? ? "
+           "48 33 C4 48 89 84 24 ? ? "
+           "? ? 44 0F B6 EA",
+           // 1.21.111
+           "4C 8B DC 49 89 5B ? 49 89 6B ? 49 89 73 ? 57 41 54 41 55 41 56 "
+           "41 57 48 81 EC 90 00 00 00 48 8B 05 ? ? ? ? 48 33 C4 48 89 84 "
+           "24 ? ? ? ? 88 54 24"});
   if (!discardFrame) {
-    discardFrame = (PFN_mce_framebuilder_BgfxFrameBuilder_discardFrame)
-      memory::resolveIdentifier({"4C 8B DC 49 89 5B ? 49 89 6B ? 49 89 73 ? "
-                                "57 41 54 41 55 41 56 41 57 48 81 EC ? ? ? ? "
-                                "48 8B 05 ? ? ? ? 48 33 C4 48 89 84 24 ? ? ? ? 88 54 24"});
-    if (!discardFrame) {
-      printf("mce::framebuilder::BgfxFrameBuilder::discardFrame not found\n");
-    }
+    printf("mce::framebuilder::BgfxFrameBuilder::discardFrame not found\n");
   }
 
   freeShaderBlobs =
@@ -268,7 +255,7 @@ SKY_AUTO_STATIC_HOOK(HOOK1, memory::HookPriority::Normal,
 #elif defined(_WIN32)
 
 SKY_AUTO_STATIC_HOOK(HOOK1, memory::HookPriority::Normal,
-                     " 80 79 ? ? 75 ? 80 79 ? ? 74 ? B0 01 C3 32 C0 C3 CC CC "
+                     "80 79 ? ? 75 ? 80 79 ? ? 74 ? B0 01 C3 32 C0 C3 CC CC "
                      "CC CC CC CC CC CC CC CC CC CC CC CC 88 51 ? C3",
                      bool, int64_t a1) {
   if (shouldForceEnableVibrantVisuals()) {
