@@ -90,7 +90,13 @@ void initMCPatches() {
 
   // Bypass VendorID check to support some Intel GPUs
   // bgfx::d3d12::RendererContextD3D12::init
-  if (auto ptr = FindSignature("81 BE ? ? ? ? ? ? ? ? 75 ? 48 C7 45" /*"81 BF ?? ?? 00 00 86 80 00 00"*/); ptr) {
+  if (auto ptr = FindSignature("81 BE ? ? ? ? ? ? ? ? 0F 85 ? ? ? ? 48 C7 85 ? ? ? ? 00 00 00 00"); ptr) {
+    // 1.26.30
+    ScopedVP(ptr, 10, PAGE_READWRITE);
+    ptr[6] = 0;
+    ptr[7] = 0;
+  }  
+  else if (auto ptr = FindSignature("81 BE ? ? ? ? ? ? ? ? 75 ? 48 C7 45" /*"81 BF ?? ?? 00 00 86 80 00 00"*/); ptr) {
     // 1.19.40
     ScopedVP(ptr, 10, PAGE_READWRITE);
     ptr[6] = 0;

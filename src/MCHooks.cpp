@@ -30,31 +30,31 @@ typedef bool (*PFN_ResourcePackManager_load)(void *This,
 PFN_ResourcePackManager_load ResourcePackManager_load;
 
 DeclareHook(readFile, std::string*, void *This, void *retstr,
-            Core::PathView *path) {
-  std::string *result = original(This, retstr, path);
-  if (brd::Options::materialBinLoaderEnabled && brd::Options::redirectShaders &&
-      resourcePackManager) {
-    const std::string p = path->getUtf8CString();
-    if (p.find("data/renderer/materials/") != std::string::npos &&
-        strncmp(p.c_str() + p.size() - 13, ".material.bin", 13) == 0) {
+    Core::PathView *path) {
+    std::string *result = original(This, retstr, path);
+    if (brd::Options::materialBinLoaderEnabled && brd::Options::redirectShaders &&
+        resourcePackManager) {
+        const std::string p = path->getUtf8CString();
+        if (p.find("data/renderer/materials/") != std::string::npos &&
+            strncmp(p.c_str() + p.size() - 13, ".material.bin", 13) == 0) {
 
-      std::string binPath =
-          "renderer/materials/" + p.substr(p.find_last_of('/') + 1);
-      ResourceLocation location(binPath);
-      std::string out;
-      // Logger::log("ResourcePackManager::load path=%s", binPath.c_str());
+            std::string binPath =
+                "renderer/materials/" + p.substr(p.find_last_of('/') + 1);
+            ResourceLocation location(binPath);
+            std::string out;
+            // Logger::log("ResourcePackManager::load path=%s", binPath.c_str());
 
-      bool success =
-          ResourcePackManager_load(resourcePackManager, location, out);
+            bool success =
+                ResourcePackManager_load(resourcePackManager, location, out);
 
-      if (success && !out.empty()) {
-        result->assign(out);
-        Logger::log("Loaded %s", binPath.c_str());
-      }
-      // Logger::log("ResourcePackManager::load ret=%d", success);
+            if (success && !out.empty()) {
+                result->assign(out);
+                Logger::log("Loaded %s", binPath.c_str());
+            }
+            // Logger::log("ResourcePackManager::load ret=%d", success);
+        }
     }
-  }
-  return result;
+    return result;
 }
 
 DeclareHook(clientInstance_Update, __int64, void *This,
@@ -73,7 +73,7 @@ DeclareHook(clientInstance_Update, __int64, void *This,
       "? ? ? ?"
       " 48 8B ? 48 83 C4 ? 5B C3 CC CC CC CC CC CC CC 48 83 EC");
 
-  if (adrr && !resourcePackManager) {
+  if (adrr) {
     auto func = reinterpret_cast<func_t>(adrr);
     if (func) {
       resourcePackManager = func(This);
@@ -101,6 +101,12 @@ DeclareHook(mce_framebuilder_BgfxFrameBuilder_endFrame, void, uintptr_t This,
   if (brd::Options::reloadShadersAvailable && brd::Options::reloadShaders) {
     brd::Options::reloadShaders = false;
     reloadMaterial(This);
+  }
+  if (This) {
+      auto unk = *(uintptr_t*)((char*)This + 0x350); //offset at 48 89 88 50 03 00 00 48 8B B0 58 03 00 00
+      if (unk) {
+          gDeferredParams = (dragon::framerenderer::DeferredShadingParameters*)(unk + 0xB0);
+      }
   }
   original(This, frameBuilderContext);
 }
@@ -153,6 +159,8 @@ void initMCHooks() {
   }
 
   TrySigHook(clientInstance_Update,
+             // 1.26.30
+             "55 41 57 41 56 41 55 41 54 56 57 53 48 81 EC ? ? ? ? 48 8D AC 24 ? ? ? ? 48 C7 85 ? ? ? ? ? ? ? ? 89 D3 48 89 CE ? ? ? 48 8B 80",
              // 1.26.20
              "55 56 57 53 48 81 EC ? ? ? ? 48 8D AC 24 ? ? ? ? 48 C7 85 ? ? ? ? ? ? ? ? 89 D3 48 89 CE 48 8B 01",
              // 1.26.10
@@ -165,6 +173,8 @@ void initMCHooks() {
              "? ? 44 0F B6 FA 48 8B F9 33 DB");
 
   TrySigHook(readFile,
+             // 1.26.30
+             "55 41 57 41 56 56 57 53 48 81 EC ? ? ? ? 48 8D AC 24 ? ? ? ? 48 C7 85 ? ? ? ? ? ? ? ? 48 89 D6 ? ? ? ? 0F 29 45",
              // 1.26.20
              "55 56 48 83 EC ? 48 8D 6C 24 ? 48 C7 45 ? ? ? ? ? 48 89 D6 48 8D 4D ? 4C 89 45 ? 4C 89 C2 E8 ? ? ? ? 48 8D 55 ? 48 89 F1 E8 ? ? ? ? 48 8B 4D ? E8 ? ? ? ? 48 89 F0 48 83 C4 ? 5E 5D C3 66 66 2E 0F 1F 84 00 ? ? ? ? 48 89 54 24 ? 55 56 48 83 EC ? 48 8D 6A ? 48 8B 4D ? E8 ? ? ? ? 90 48 83 C4 ? 5E 5D C3 55 56",
              // 1.26.0
@@ -172,6 +182,8 @@ void initMCHooks() {
              "11 44 24 ? E8 ? ? ? ? 48 8B C3 48 83 C4 ? 5B C3 CC CC CC CC CC "
              "CC CC CC 48 89 5C 24");
   TrySigHook(mce_framebuilder_BgfxFrameBuilder_endFrame,
+             // 1.26.30
+             "55 41 57 41 56 41 55 41 54 56 57 53 B8 ? ? ? ? E8 ? ? ? ? 48 29 C4 48 8D AC 24 ? ? ? ? 44 0F 29 8D ? ? ? ? 44 0F 29 85 ? ? ? ? 0F 29 BD ? ? ? ? 0F 29 B5 ? ? ? ? 48 C7 85 ? ? ? ? ? ? ? ? 48 89 95 ? ? ? ? 48 89 8D",
              // 1.26.20
              "55 41 57 41 56 41 55 41 54 56 57 53 B8 ? ? ? ? E8 ? ? ? ? 48 29 C4 48 8D AC 24 ? ? ? ? 66 44 0F 29 95",
              // 1.26.10
@@ -200,9 +212,7 @@ void initMCHooks() {
              "48 89 5C 24 ? 48 89 6C 24 ? 56 57 41 56 48 83 EC 50 0F 29 74 24 "
              "? 48 8B 05 ? ? ? ? 48 33 C4 48 89 44 24 ? 4D 8B F1");
   TrySigHook(RayTracingResourcesConstrucstor,
-             // 1.26.20
-             // TODO
-             // 1.21.100
-             "48 89 5C 24 ? 48 89 74 24 ? 48 89 4C 24 ? 57 48 83 EC 20 48 8B "
-             "F9 33 F6 48 89 31 48 89 71 ? C7 41");
+      // 1.21.100
+      "48 89 5C 24 ? 48 89 74 24 ? 48 89 4C 24 ? 57 48 83 EC 20 48 8B "
+      "F9 33 F6 48 89 31 48 89 71 ? C7 41");
 }

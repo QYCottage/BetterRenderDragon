@@ -215,6 +215,16 @@ DeclareHook(Mouse,void, void *a1, void *a2, void *a3, void *a4) {
   return original(a1, a2, a3, a4);
 }
 
+DeclareHook(Mouse2,void, void* a1, char a2, char a3, __int16 a4, __int16 a5, __int16 a6, __int16 a7, char a8) {
+  if (ImGui::GetCurrentContext()) {
+    ImGuiIO &io = ImGui::GetIO();
+    if (io.WantCaptureMouse) {
+      return;
+    }
+  }
+  return original(a1, a2, a3, a4, a5, a6, a7, a8);
+}
+
 void initImGuiHooks() {
     window = FindWindowA("Bedrock", "Minecraft");
 
@@ -249,12 +259,24 @@ void initImGuiHooks() {
         Logger::log("Failed to initialize Kiero");
     }
 
-    TrySigHook(Mouse,
-        // 1.26.20
-        "55 41 57 41 56 41 55 41 54 56 57 53 48 83 EC ? 48 8D 6C 24 ? 48 C7 45 ? ? ? ? ? 44 89 CE 4C 89 C3 49 89 D6",
-        // 1.26.10
-        "4C 8B DC 53 55 56 57 41 54 41 56 41 57 48 81 EC ? ? ? ? 45 0F B7 E1",
-        // 1.21.130
-        "4C 8B ? 49 89 ? ? 49 89 ? ? 56 57 41 ? 48 81 EC ? ? ? ? 41 0F ? ? 45 0F"
-    );
+    if (auto ptr = FindSignature("41 57 41 56 41 55 41 54 56 57 55 53 48 83 EC ? 44 89 CF 44 89 C3 89 D5 48 89 CE 44 0F B7 A4 24"); ptr) {
+        Hook(Mouse2,
+            // 1.26.30 alternative
+            (void*)ptr
+            );
+    }
+    else {
+        //inlined by CLANG
+        TrySigHook(Mouse,
+            // 1.26.20
+            "55 41 57 41 56 41 55 41 54 56 57 53 48 83 EC ? 48 8D 6C 24 ? 48 C7 45 ? ? ? ? ? 44 89 CE 4C 89 C3 49 89 D6",
+            // 1.26.10
+            "4C 8B DC 53 55 56 57 41 54 41 56 41 57 48 81 EC ? ? ? ? 45 0F B7 E1",
+            // 1.21.130
+            "4C 8B ? 49 89 ? ? 49 89 ? ? 56 57 41 ? 48 81 EC ? ? ? ? 41 0F ? ? 45 0F"
+        );
+    }
+
+
+
 }
