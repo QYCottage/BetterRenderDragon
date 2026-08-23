@@ -8,7 +8,7 @@
 
 #include "MinHook.h"
 #include "api/memory/HookAPI.hpp"
-#include "../lib/kiero-src/include/kiero.hpp"
+#include "kiero.hpp"
 #include <winrt/base.h>
 #include <safetyhook.hpp>
 using Microsoft::WRL::ComPtr;
