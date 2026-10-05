@@ -1,120 +1,96 @@
 <p align="right">
   <a href="./README.zh.md">
-    <img src="https://img.shields.io/badge/切换为-中文-46c048?style=flat-square&logo=googletranslate&labelColor=3e3e3e" alt="切换为中文" />
+    <img src="https://img.shields.io/badge/切换为-中文-46c048?logo=googletranslate&labelColor=3e3e3e" alt="切换为中文" />
   </a>
 </p>
 
-# 🚀 BetterRenderDragon
-
-**Add more features to RenderDragon! Compatible with Minecraft Bedrock Edition 26.4X**
-
 <div align="center">
 
-![Release](https://img.shields.io/github/v/release/QYCottage/BetterRenderDragon?style=flat-square)
-![Total Downloads](https://img.shields.io/github/downloads/QYCottage/BetterRenderDragon/total?style=flat-square)
-![Latest Release Downloads](https://img.shields.io/github/downloads/QYCottage/BetterRenderDragon/latest/total?style=flat-square)
-![Stars](https://img.shields.io/github/stars/QYCottage/BetterRenderDragon?style=flat-square)
-![Forks](https://img.shields.io/github/forks/QYCottage/BetterRenderDragon?style=flat-square)
-![License](https://img.shields.io/github/license/QYCottage/BetterRenderDragon?style=flat-square)
-[![Discord](https://img.shields.io/discord/1124235469245382698?style=flat-square&logo=discord)](https://discord.gg/8nGcV8QkKZ)
+# BetterRenderDragon
+
+**Add more features to RenderDragon! Compatible with Minecraft: Bedrock Edition (latest supported: 26.4x)**
+
+[![Release](https://img.shields.io/github/v/release/QYCottage/BetterRenderDragon?label=Release)](https://github.com/QYCottage/BetterRenderDragon/releases/latest)
+![Total Downloads](https://img.shields.io/github/downloads/QYCottage/BetterRenderDragon/total?label=Total%20Downloads)
+![Latest Release Downloads](https://img.shields.io/github/downloads/QYCottage/BetterRenderDragon/latest/total?label=Latest%20Downloads)
+![Stars](https://img.shields.io/github/stars/QYCottage/BetterRenderDragon?label=Stars)
+![Forks](https://img.shields.io/github/forks/QYCottage/BetterRenderDragon?label=Forks)
+![License](https://img.shields.io/github/license/QYCottage/BetterRenderDragon?label=License)
+[![Discord](https://img.shields.io/discord/1124235469245382698?logo=discord&label=Discord)](https://discord.gg/8nGcV8QkKZ)
 
 </div>
 
----
+## Features
 
-## ✨ Features
+- **Force-enable Vibrant Visuals on servers**
+- **Load RenderDragon shaders from resource packs**
+- **Hot-reload RenderDragon shaders in real-time**
+- **Configurable ImGui in-game interface**
 
-- ⚡ **Force Enable Vibrant Visuals on severs**
-- 🎨 **Load RenderDragon Shaders from Resource Packs**
-- 🔄 **Hot-Reload RenderDragon Shaders**
-- 🛠️ **Configurable ImGui Interface**
+## Installation
 
----
+### Universal Method
 
-## 📝 How to Install
+1. **Verify version compatibility**
+   - Ensure your Minecraft: Bedrock Edition version is supported (current latest supported versions are **26.4x**).
 
----
-### Universal method
+2. **Download required files**
+   - Download `BetterRenderDragon.dll` from the [latest Releases](https://github.com/QYCottage/BetterRenderDragon/releases/latest) page.
+   - Download [MCBE.DLL Injector](https://github.com/ambiennt/MCBE-DLL-Injector/releases/latest) (or any DLL injector of your choice).
 
-1. **Make sure your minecraft version is supported currently versions 26.4X are supported**
+3. **Configure the injector**
+   - Open your injector.
+   - Click **Select**.
+   - Select the downloaded `BetterRenderDragon.dll` file.
 
-2. **Download Files**
+4. **Launch and inject**
+   - Launch Minecraft.
+   - Click **Inject** in your injector.
 
-    - Download BetterRenderDragon from the [Releases](https://github.com/QYCottage/BetterRenderDragon/releases/latest) page.
-    - Download [MCBE.DLL Injector](https://github.com/ambiennt/MCBE-DLL-Injector/releases/latest) or use any injector you already have
+### Using [LeviLauncher](https://github.com/LiteLDev/LeviLauncher)
 
-3. **Adding BetterRenderDragon to the injector**
+1. **Verify version compatibility**
+   - Ensure your Minecraft version is supported (current latest supported versions are **26.4x**).
 
-    - Open your injector.
-    - Click `Select`.
-    - Find the BetterRenderDragon.dll file we downloaded and double click it.
+2. **Download `BetterRenderDragon.dll`**
+   - Download `BetterRenderDragon.dll` from the [latest Releases](https://github.com/QYCottage/BetterRenderDragon/releases/latest) page.
+
+3. **Import into LeviLauncher**
+   - Open LeviLauncher.
+   - Navigate to the **Mods** page.
+   - Click **Import .zip/.dll** and select the downloaded `BetterRenderDragon.dll` file.
 
 4. **Launch the game**
-    - Open Minecraft
-    - Click the inject button in your injector
-    - Enjoy!
+   - Start Minecraft through LeviLauncher.
 
+## FAQ
 
-### If you are using [LeviLauncher](https://github.com/LiteLDev/LeviLauncher/tree/main)
+- **My antivirus blocked BetterRenderDragon. What should I do?**
+  > Add `BetterRenderDragon.dll` to your antivirus exclusions or whitelist. Because the DLL is not digitally signed, some antivirus programs may falsely flag it as suspicious.
 
-1. **Make sure your minecraft version is supported currently versions 26.2X is supported**
-
-2. **Download [BetterRenderDragon.dll](#)**
-
-    - Download from the [Releases](https://github.com/QYCottage/BetterRenderDragon/releases/latest) page.
-
-3. **Add it to LeviLauncher **
-
-    - Open LeviLauncher.
-    - Go to the `Mods` page.
-    - Click `Import .zip/.dll` and .
-    - select the `BetterRenderDragon.dll` file we just downloaded.
-
-4. **Launch the game and enjoy!**
-
-
-
-## ❓ FAQ
-
-- **My antivirus blocked BetterRenderDragon, what should I do?**
-
-  > Simply add BetterRenderDragon to your antivirus whitelist. This program does not have a valid digital signature, which is normal.
-
-- **Can't find the BetterRenderDragon menu?**
-
-  > Press `F6` to show or hide the BetterRenderDragon menu.
+- **How do I open the BetterRenderDragon menu?**
+  > Press `F6` to show or hide the BetterRenderDragon in-game menu.
 
 - **Error: "FindFirstFileW failed: error [00000002] The system cannot find the file specified."**
+  > Your antivirus software likely quarantined or deleted `BetterRenderDragon.dll` in the `dlls` directory. Restore the file, add it to your antivirus exclusions, and try again.
 
-  > Most likely your antivirus deleted the BetterRenderDragon dll file in the `dlls` folder. Add it to the antivirus whitelist and try again.
+## Credits
 
----
-
-## 🤝 Credits
-
-- [Original authors](https://github.com/ddf8196/BetterRenderDragon)
+- [Original Project](https://github.com/ddf8196/BetterRenderDragon)
 - [DreamGuXiang](https://github.com/dreamguxiang)
 - [StoneHunter](https://github.com/st0nehunter)
 - [MCBE-DLL-Menu by h-arvs](https://github.com/h-arvs/MCBE-DLL-Menu)
 
----
+## Contact & Feedback
 
-## 📬 Contact & Feedback
+If you encounter any issues or have feature suggestions, please [open an issue](https://github.com/QYCottage/BetterRenderDragon/issues).
 
-If you encounter any issues or have suggestions, please [open an Issue](https://github.com/QYCottage/BetterRenderDragon/issues).
+## Discord Community
 
----
+Click here to join our Discord community for technical support, announcements, and discussion!
 
-## 💬 Discord Community
+[![Discord Banner](./.github/assets/discord_banner.png)](https://discord.gg/8nGcV8QkKZ)
 
-Join our Discord community for technical support and discussion!
-
-[Join Discord](https://discord.gg/8nGcV8QkKZ)
-
----
-
-## 📝 Notice
+## Notice
 
 **This program is not affiliated with, associated with, or endorsed by Mojang Studios in any way.**
-
----
